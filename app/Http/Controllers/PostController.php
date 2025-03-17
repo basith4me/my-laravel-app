@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-
+    //deletePost
     public function deletePost(Post $post)
     {
         if (auth()->user()->id === $post['user_id']) {
@@ -27,11 +27,12 @@ class PostController extends Controller
         $formData = $request->validate([
             'title' => 'required',
             'body' => 'required',
+            'status' => 'required|in:pending,processing,completed'
         ]);
 
         $formData['title'] = strip_tags($formData['title']);
         $formData['body'] = strip_tags($formData['body']);
-
+        $formData['status'] = strip_tags($formData['status']);
         $post->update($formData);
         return redirect('/');
     }
@@ -44,6 +45,8 @@ class PostController extends Controller
         }
         return view('/edit-post', ['post' => $post]);
     }
+
+    //createPost
     public function createPost(Request $request)
     {
         $formData = $request->validate([
@@ -52,6 +55,7 @@ class PostController extends Controller
         ]);
         $formData['title'] = strip_tags($formData['title']);
         $formData['body'] = strip_tags($formData['body']);
+        $formData['status'] = 'pending';
         $formData['user_id'] = auth()->id();
 
         Post::create($formData);

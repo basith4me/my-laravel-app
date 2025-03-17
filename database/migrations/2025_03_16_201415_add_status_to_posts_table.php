@@ -10,12 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('title');
-            $table->longText('body');
-            $table->foreignId('user_id')->constrained();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'processing', 'completed'])
+                  ->default('pending')
+                  ->after('body'); // after body column
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };

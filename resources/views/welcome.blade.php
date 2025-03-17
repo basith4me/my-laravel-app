@@ -6,64 +6,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
-    <title>Laravel app</title>
+    <title>Laravel App</title>
 </head>
 
-<body>
-    @auth
-        <p>You are logged in.</p>
-        <form action="/logout" method="POST">
-            @csrf
-            <button class="bg-orange-600 text-white p-2 font-bold m-3 rounded">Logout</button>
-        </form>
-        <div class="p-2 flex justify-center items-center border border-blue-300 space-x-2">
-
-            <h1>Create a post</h1>
-            <form action="/create-post" method="POST" class="item-center justify-center flex space-x-3">
-                @csrf
-                <input type="text" name="title" placeholder="Title" class="border border-blue-300">
-                <textarea name="body" placeholder="write your content" class="border border-blue-200"></textarea>
-                <button class="text-white bg-blue-600 font-bold rounded p-2">Create Post</button>
-            </form>
-        </div>
-        <div class="w-full p-2 flex flex-col justify-center items-center border border-blue-300 space-x-2 mt-2">
-            <h1>All posts</h1>
-            @foreach ($posts as $post)
-                <div class="bg-blue-100 flex flex-col p-2 m-2 w-full">
-                    <h3 class="font-bold">{{ $post['title'] }} by {{ $post->user->name}}</h3>
-                    {{$post['body']}}
-                    <P class="text-blue-600"><a href="/edit-post/{{$post->id}}">Edit</a></P>
-                    <form action="/delete-post/{{$post->id}}" method="POST">
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-6">
+        @auth
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                <p class="text-lg font-semibold text-green-600">You are logged in.</p>
+                <form action="/logout" method="POST" class="mt-4">
                     @csrf
-                    @method('DELETE')
-                    <button class="bg-red-500 text-white p-2 rounded">Delete</button>
+                    <button
+                        class="bg-orange-600 text-white px-4 py-2 font-bold rounded hover:bg-orange-700 transition">Logout</button>
+                </form>
+            </div>
+
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h1 class="text-xl font-bold mb-4">Create a Post</h1>
+                <form action="/create-post" method="POST" class="space-y-4">
+                    @csrf
+                    <input type="text" name="title" placeholder="Title"
+                        class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                    <textarea name="body" placeholder="Write your content"
+                        class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500"></textarea>
+                    <button class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition">Create
+                        Post</button>
+                </form>
+            </div>
+
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h1 class="text-xl font-bold mb-4">All Posts</h1>
+                @foreach ($posts as $post)
+                    <div class="bg-gray-100 p-4 rounded-lg mb-4 shadow">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg">{{ $post['title'] }} <span class="text-sm text-gray-600">by
+                                    {{ $post->user->name }}</span></h3>
+                            <p
+                                class="p-1 text-black rounded 
+                        {{ $post['status'] === 'pending' ? 'bg-red-500' : ($post['status'] === 'processing' ? 'bg-orange-500' : 'bg-green-500') }}">
+                                @if ($post['status'] === 'pending')
+                                    To-Do
+                                @elseif ($post['status'] === 'processing')
+                                    In Progress
+                                @else
+                                    Done
+                                @endif
+
+                            </p>
+
+                        </div>
+                        <p class="mt-2">{{ $post['body'] }}</p>
+
+                        <div class="flex items-center space-x-4 mt-4">
+                            <a href="/edit-post/{{ $post->id }}" class="text-blue-600 hover:underline">Edit</a>
+                            <form action="/delete-post/{{ $post->id }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h1 class="text-xl font-bold mb-4">Register</h1>
+                    <form action="/register" method="POST" class="space-y-4">
+                        @csrf
+                        <input name="name" type="text" placeholder="Name"
+                            class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                        <input name="email" type="email" placeholder="Email"
+                            class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                        <input name="password" type="password" placeholder="Password"
+                            class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                        <button
+                            class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition">Register</button>
                     </form>
                 </div>
-            @endforeach
-
-        </div>
-    @else
-        <div class="p-2 flex justify-center items-center border border-blue-300">
-            <form action="/register" method="POST">
-                @csrf
-                <h1>Register Form</h1>
-                <input name="name" type="text" placeholder="Name" class="border border-blue-300">
-                <input name="email" type="email" placeholder="Email" class="border border-blue-300">
-                <input name="password" type="password" placeholder="password" class="border border-blue-300">
-                <button class="text-white bg-blue-600 p-2 rounded">Register</button>
-            </form>
-        </div>
-        <div class="p-2 flex justify-center items-center border border-blue-300">
-            <form action="/login" method="POST">
-                @csrf
-                <h1>Login Form</h1>
-                <input name="loginName" type="text" placeholder="Name" class="border border-blue-300">
-                <input name="loginPassword" type="password" placeholder="password" class="border border-blue-300">
-                <button class="text-white bg-blue-600 p-2 rounded">Login</button>
-            </form>
-        </div>
-    @endauth
-
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h1 class="text-xl font-bold mb-4">Login</h1>
+                    <form action="/login" method="POST" class="space-y-4">
+                        @csrf
+                        <input name="loginName" type="text" placeholder="Name"
+                            class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                        <input name="loginPassword" type="password" placeholder="Password"
+                            class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
+                        <button
+                            class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition">Login</button>
+                    </form>
+                </div>
+            </div>
+        @endauth
+    </div>
 </body>
 
 </html>
