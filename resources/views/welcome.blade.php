@@ -11,8 +11,11 @@
 
 <body class="bg-gray-100 text-gray-800">
     <div class="container mx-auto p-6">
+        <div class="text-center mb-6 bg-blue-200 text-blue p-4 rounded-lg">
+            <h1 class="font-bold text-xl">Task Manager Application</h1>
+        </div>
         @auth
-            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6 flex flex-col items-end justify-end">
                 <p class="text-lg font-semibold text-green-600">You are logged in.</p>
                 <form action="/logout" method="POST" class="mt-4">
                     @csrf
@@ -22,25 +25,25 @@
             </div>
 
             <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h1 class="text-xl font-bold mb-4">Create a Post</h1>
+                <h1 class="text-xl font-bold mb-4">Add a task</h1>
                 <form action="/create-post" method="POST" class="space-y-4">
                     @csrf
                     <input type="text" name="title" placeholder="Title"
                         class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500">
-                    <textarea name="body" placeholder="Write your content"
+                    <textarea name="body" placeholder="Describe your task"
                         class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500"></textarea>
                     <button class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition">Create
-                        Post</button>
+                        Task</button>
                 </form>
             </div>
 
             <div class="bg-white shadow-md rounded-lg p-6">
-                <h1 class="text-xl font-bold mb-4">All Posts</h1>
+                <h1 class="text-xl font-bold mb-4">All Tasks</h1>
                 @foreach ($posts as $post)
                     <div class="bg-gray-100 p-4 rounded-lg mb-4 shadow">
                         <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-lg">{{ $post['title'] }} <span class="text-sm text-gray-600">by
-                                    {{ $post->user->name }}</span></h3>
+                            <h3 class="font-bold text-lg">{{ $post['title'] }} 
+                                   </h3>
                             <p
                                 class="p-1 text-black rounded 
                         {{ $post['status'] === 'pending' ? 'bg-red-500' : ($post['status'] === 'processing' ? 'bg-orange-500' : 'bg-green-500') }}">
