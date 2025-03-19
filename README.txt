@@ -26,11 +26,9 @@
    Copy the `.env.example` file to `.env` and update the environment variables as needed.
    cp .env.example .env
 
-
 4. Generate the application key:
 
    php artisan key:generate
-   
 
 ## Database Setup
 
@@ -40,7 +38,6 @@
 
    CREATE DATABASE my_laravel_app;
    
-
 2. Update the `.env` file:
 
    Update the database configuration in the `.env` file with your database credentials.
@@ -52,7 +49,6 @@
    DB_USERNAME=your_username
    DB_PASSWORD=your_password
    
-
 3. Run database migrations:
    
    php artisan migrate
@@ -62,7 +58,6 @@
 1. Start the development server:
 
    php artisan serve
-  
 
 2. Access the application:
 
