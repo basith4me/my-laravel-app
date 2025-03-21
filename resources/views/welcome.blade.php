@@ -31,6 +31,9 @@
                 <livewire:auth-component />
             </div>
         @endauth
+        <div>
+            <livewire:weather-app />
+        </div>
     </div>
 </body>
 
